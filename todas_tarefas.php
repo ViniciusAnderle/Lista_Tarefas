@@ -330,11 +330,9 @@ function traduzPrioridade($prioridade)
             ?>
             <?php foreach ($tarefasFiltradas as $tarefa) : ?>
                 <?php if ($tarefa->prazo && strtotime($tarefa->prazo) > time() && (strtotime($tarefa->prazo) - time() <= 86400)) : ?>
-                    showNotification('A tarefa "<?php echo $tarefa->tarefa; ?>" está próxima do prazo de vencimento!', <?php echo $position; ?>);
                     <?php $position += 40; // Aumenta a posição para a próxima notificação 
                     ?>
                 <?php elseif ($tarefa->prazo && strtotime($tarefa->prazo) < time()) : ?>
-                    showNotification('A tarefa "<?php echo $tarefa->tarefa; ?>" está atrasada!', <?php echo $position; ?>);
                     <?php $position += 40; // Aumenta a posição para a próxima notificação 
                     ?>
                 <?php endif; ?>
