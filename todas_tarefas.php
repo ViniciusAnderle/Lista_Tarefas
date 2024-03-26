@@ -87,7 +87,7 @@ function traduzPrioridade($prioridade)
             left: 20px;
             bottom: 20px;
             max-height: 650px; /* Altura máxima das notificações */
-            width: 300px;
+            width: 1300px;
             overflow-y: auto; /* Adiciona scroll vertical quando necessário */
             overflow-x: auto; /* Adiciona scroll horizontal quando necessário */
             white-space: nowrap; /* Faz com que as notificações sejam exibidas em uma única linha */
@@ -95,7 +95,7 @@ function traduzPrioridade($prioridade)
         }
 
         .notification {
-            width: 300px;
+            width: 400px;
 
             background-color: #f44336;
             color: white;

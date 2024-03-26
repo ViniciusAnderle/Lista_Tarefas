@@ -79,8 +79,10 @@ if ($acao == 'desarquivar' && isset($_GET['id'])) {
                                 <tbody>
                                     <?php foreach ($tarefas as $tarefa) : ?>
                                         <tr>
-                                            <td><?= $tarefa->id ?></td>
                                             <td><?= $tarefa->tarefa ?></td>
+                                            <td><?= $tarefa->categoria ?></td>
+                                            <td><?= $tarefa->prazo ?></td>
+
                                             <td><?= $tarefa->data_cadastrado ?></td>
                                             <td><?= $tarefa->prioridade ?></td>
                                             <td>
