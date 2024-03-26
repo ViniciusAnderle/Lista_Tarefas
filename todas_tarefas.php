@@ -174,7 +174,7 @@ function traduzPrioridade($prioridade)
                             <h4>Todas tarefas</h4>
                             <hr />
 
-                            
+
                             <form id="formFiltro" method="get">
                                 <label for="filtro">Filtrar por:</label>
                                 <select id="filtro" name="filtro" onchange="this.form.submit()">
@@ -185,10 +185,12 @@ function traduzPrioridade($prioridade)
                                 </select>
 
                                 <label for="ordenacao">Ordenar por:</label>
+                                <label for="ordenacao">Ordenar por:</label>
                                 <select id="ordenacao" name="ordenacao" onchange="this.form.submit()">
                                     <option value="tarefa" <?php echo $ordenacao === 'tarefa' ? 'selected' : ''; ?>>Alfabética</option>
-                                    <option value="data_cadastrado" <?php echo $ordenacao === 'data_cadastrado' ? 'selected' : ''; ?>>Data de Cadastro</option>
+                                    <option value="categoria" <?php echo $ordenacao === 'categoria' ? 'selected' : ''; ?>>Categoria</option>
                                     <option value="prioridade" <?php echo $ordenacao === 'prioridade' ? 'selected' : ''; ?>>Prioridade</option>
+                                    <option value="data_cadastrado" <?php echo $ordenacao === 'data_cadastrado' ? 'selected' : ''; ?>>Data de Cadastro</option>
                                 </select>
                             </form>
 
