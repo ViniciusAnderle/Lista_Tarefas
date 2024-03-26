@@ -235,20 +235,16 @@ function traduzPrioridade($prioridade)
                                             </td>
                                         </tr>
                                         <?php if ($tarefa->prazo && strtotime($tarefa->prazo) > time() && (strtotime($tarefa->prazo) - time() <= 86400)) : ?>
-                                            <script>
-                                                setTimeout(function() {
-                                                    alert("A tarefa '<?php echo $tarefa->tarefa; ?>' está a um dia do vencimento!");
-                                                }, 15);
-                                            </script>
+                                            <tr>
+                                                <td colspan="6" class="text-danger">Esta tarefa está próxima do prazo de vencimento!</td>
+                                            </tr>
                                         <?php elseif ($tarefa->prazo && strtotime($tarefa->prazo) < time()) : ?>
-                                            <script>
-                                                setTimeout(function() {
-                                                    alert("A tarefa '<?php echo $tarefa->tarefa; ?>' está a um dia do vencimento!");
-                                                }, 15);
-                                            </script>
-                                    <?php endif;
-                                    endforeach;
-                                    ?>
+                                            <tr>
+                                                <td colspan="6" class="text-danger">Esta tarefa está atrasada!</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+
 
                                 </tbody>
                             </table>
@@ -258,6 +254,25 @@ function traduzPrioridade($prioridade)
             </div>
         </div>
     </div>
+    <script>
+        function showNotification(message) {
+            var notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(function() {
+                notification.classList.add('show');
+                setTimeout(function() {
+                    notification.classList.remove('show');
+                    setTimeout(function() {
+                        document.body.removeChild(notification);
+                    }, 500);
+                }, 3000);
+            }, 100);
+        }
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
