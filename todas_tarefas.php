@@ -103,11 +103,6 @@ if ($ordenacao === 'data_cadastrado') {
             //incluir button no form
             form.appendChild(button)
 
-            //teste
-
-            //teste
-            //console.log(form)
-
             //selecionar a div tarefa
             let tarefa = document.getElementById('tarefa_' + id)
 
@@ -165,7 +160,8 @@ if ($ordenacao === 'data_cadastrado') {
                             <form id="formFiltro" method="get">
                                 <label for="filtro">Filtrar por:</label>
                                 <select id="filtro" name="filtro" onchange="this.form.submit()">
-                                    <option value="todas" <?php echo $filtro === 'todas' ? 'selected' : ''; ?>>Todas</option <option value="pendentes" <?php echo $filtro === 'pendentes' ? 'selected' : ''; ?>>Pendentes</option>
+                                    <option value="todas" <?php echo $filtro === 'todas' ? 'selected' : ''; ?>>Todas</option>
+                                    <option value="pendentes" <?php echo $filtro === 'pendentes' ? 'selected' : ''; ?>>Pendentes</option>
                                     <option value="realizado" <?php echo $filtro === 'realizado' ? 'selected' : ''; ?>>Realizadas</option>
                                 </select>
                             </form>
@@ -177,6 +173,7 @@ if ($ordenacao === 'data_cadastrado') {
                                     <tr>
                                         <th scope="col">Tarefa</th>
                                         <th scope="col">Categoria</th>
+                                        <th scope="col">Prazo</th>
                                         <th scope="col">Data de Cadastro</th>
                                         <th scope="col">Ações</th>
                                     </tr>
@@ -186,6 +183,7 @@ if ($ordenacao === 'data_cadastrado') {
                                         <tr>
                                             <td id="tarefa_<?php echo $tarefa->id; ?>"><?php echo $tarefa->tarefa; ?></td>
                                             <td><?php echo $tarefa->categoria; ?></td>
+                                            <td><?php echo $tarefa->prazo ? date('d/m/Y', strtotime($tarefa->prazo)) : 'Sem prazo'; ?></td>
                                             <td><?php echo date('d/m/Y H:i:s', strtotime($tarefa->data_cadastrado)); ?></td>
                                             <td>
                                                 <button class="btn btn-warning" onclick="editar(<?php echo $tarefa->id; ?>, '<?php echo $tarefa->tarefa; ?>')">
