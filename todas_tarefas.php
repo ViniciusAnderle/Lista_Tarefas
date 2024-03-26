@@ -39,6 +39,10 @@ if ($filtro === 'pendentes') {
     $tarefasFiltradas = array_filter($tarefas, function ($tarefa) {
         return $tarefa->status === 'realizado';
     });
+} else if ($filtro === 'vencidas') {
+    $tarefasFiltradas = array_filter($tarefas, function ($tarefa) {
+        return $tarefa->status === 'pendente' && strtotime($tarefa->prazo) < time();
+    });
 } else {
     $tarefasFiltradas = $tarefas;
 }
@@ -163,6 +167,7 @@ if ($ordenacao === 'data_cadastrado') {
                                     <option value="todas" <?php echo $filtro === 'todas' ? 'selected' : ''; ?>>Todas</option>
                                     <option value="pendentes" <?php echo $filtro === 'pendentes' ? 'selected' : ''; ?>>Pendentes</option>
                                     <option value="realizado" <?php echo $filtro === 'realizado' ? 'selected' : ''; ?>>Realizadas</option>
+                                    <option value="vencidas" <?php echo $filtro === 'vencidas' ? 'selected' : ''; ?>>Vencidas</option>
                                 </select>
                             </form>
 
@@ -202,7 +207,22 @@ if ($ordenacao === 'data_cadastrado') {
                                                 </button>
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                        <?php if ($tarefa->prazo && strtotime($tarefa->prazo) > time() && (strtotime($tarefa->prazo) - time() <= 86400)) : ?>
+                                            <script>
+                                                setTimeout(function() {
+                                                    alert("A tarefa '<?php echo $tarefa->tarefa; ?>' está a um dia do vencimento!");
+                                                }, 15);
+                                            </script>
+                                        <?php elseif ($tarefa->prazo && strtotime($tarefa->prazo) < time()) : ?>
+                                            <script>
+                                                setTimeout(function() {
+                                                    alert("A tarefa '<?php echo $tarefa->tarefa; ?>' está a um dia do vencimento!");
+                                                }, 15);
+                                            </script>
+                                    <?php endif;
+                                    endforeach;
+                                    ?>
+
                                 </tbody>
                             </table>
                         </div>

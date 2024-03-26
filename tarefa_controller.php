@@ -1,5 +1,5 @@
 <?php
-
+$acao = 'recuperar';
 require "tarefa.model.php";
 require "tarefa.service.php";
 require "conexao.php";
@@ -13,13 +13,13 @@ if ($acao == 'inserir') {
     $tarefa->__set('prazo', $_POST['prazo']); // Adiciona o prazo
     $tarefa->__set('categoria', $_POST['categoria']); 
 
-
     $conexao = new Conexao();
 
     $tarefaService = new TarefaService($conexao, $tarefa);
     $tarefaService->inserir();
 
     header('Location: nova_tarefa.php?inclusao=1');
+    exit;
 } else if ($acao == 'recuperar') {
 
     $tarefa = new Tarefa();
@@ -43,6 +43,7 @@ if ($acao == 'inserir') {
         } else {
             header('location: todas_tarefas.php');
         }
+        exit;
     }
 } else if ($acao == 'remover') {
 
@@ -59,6 +60,7 @@ if ($acao == 'inserir') {
     } else {
         header('location: todas_tarefas.php');
     }
+    exit;
 } else if ($acao == 'marcarRealizada') {
 
     $tarefa = new Tarefa();
@@ -74,6 +76,7 @@ if ($acao == 'inserir') {
     } else {
         header('location: todas_tarefas.php');
     }
+    exit;
 } else if ($acao == 'recuperarTarefasPendentes') {
     $tarefa = new Tarefa();
     $tarefa->__set('id_status', 1); // Correção: O campo é 'id_status'
