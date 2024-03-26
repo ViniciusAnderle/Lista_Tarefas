@@ -28,6 +28,23 @@ class TarefaService
             FROM 
                 tb_tarefas as t
                 LEFT JOIN tb_status as s ON (t.id_status = s.id)
+				where
+				arquivada = 0
+        ';
+		$stmt = $this->conexao->prepare($query);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_OBJ);
+	}
+	public function recuperarArquivadas()
+	{
+		$query = '
+            SELECT 
+                t.id, s.status, t.tarefa, t.data_cadastrado, t.prioridade, t.arquivada, t.prazo
+            FROM 
+                tb_tarefas as t
+                LEFT JOIN tb_status as s ON (t.id_status = s.id)
+				where
+               arquivada = 1
         ';
 		$stmt = $this->conexao->prepare($query);
 		$stmt->execute();
