@@ -1,5 +1,8 @@
+<?php include_once 'tarefa_controller.php'; ?>
+
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,6 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 </head>
+
 <body>
     <nav class="navbar navbar-light bg-light">
         <div class="container">
@@ -17,7 +21,7 @@
             </a>
         </div>
     </nav>
-    <?php if( isset($_GET['inclusao']) && $_GET['inclusao'] == 1 ) { ?>
+    <?php if (isset($_GET['inclusao']) && $_GET['inclusao'] == 1) { ?>
         <div class="bg-success pt-2 text-white d-flex justify-content-center">
             <h5>Tarefa inserida com sucesso!</h5>
         </div>
@@ -30,7 +34,6 @@
                     <li class="list-group-item active"><a href="#">Nova tarefa</a></li>
                     <li class="list-group-item"><a href="todas_tarefas.php">Todas tarefas</a></li>
                     <li class="list-group-item"><a href="arquivadas.php">Tarefas Arquivadas</a></li>
-
                 </ul>
             </div>
             <div class="col-md-9">
@@ -47,15 +50,25 @@
                                 <div class="form-group">
                                     <label>Prioridade:</label>
                                     <select class="form-control" name="prioridade">
-                                        <option value=3>Baixa</option>
-                                        <option value=2>Média</option>
-                                        <option value=1>Alta</option>
+                                        <option value="3">Baixa</option>
+                                        <option value="2">Média</option>
+                                        <option value="1">Alta</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Prazo:</label>
                                     <input type="date" class="form-control" name="prazo">
                                 </div>
+                                <div class="form-group">
+                                    <label>Categoria:</label>
+                                    <select class="form-control" name="categoria">
+                                        <option value="Estudos">Estudos</option>
+                                        <option value="Trabalho">Trabalho</option>
+                                        <option value="Casa">Casa</option>
+                                        <option value="Outros">Outros</option>
+                                    </select>
+                                </div>
+
                                 <button class="btn btn-success">Cadastrar</button>
                             </form>
                         </div>
@@ -65,4 +78,5 @@
         </div>
     </div>
 </body>
+
 </html>

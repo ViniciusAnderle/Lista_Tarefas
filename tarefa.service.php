@@ -11,20 +11,22 @@ class TarefaService
 		$this->tarefa = $tarefa;
 	}
 
-	public function inserir() {
-		$query = "insert into tb_tarefas(tarefa, prioridade, prazo) values (:tarefa, :prioridade, :prazo)";
-		$stmt = $this->conexao->prepare($query);
-		$stmt->bindValue(':tarefa', $this->tarefa->__get('tarefa'));
-		$stmt->bindValue(':prioridade', $this->tarefa->__get('prioridade'));
-		$stmt->bindValue(':prazo', $this->tarefa->__get('prazo')); // Adiciona o bindValue para prazo
-		$stmt->execute();
-	}
+	public function inserir()
+    {
+        $query = "insert into tb_tarefas(tarefa, prioridade, prazo, categoria) values (:tarefa, :prioridade, :prazo, :categoria)";
+        $stmt = $this->conexao->prepare($query);
+        $stmt->bindValue(':tarefa', $this->tarefa->__get('tarefa'));
+        $stmt->bindValue(':prioridade', $this->tarefa->__get('prioridade'));
+        $stmt->bindValue(':prazo', $this->tarefa->__get('prazo'));
+        $stmt->bindValue(':categoria', $this->tarefa->__get('categoria')); // Adiciona o bindValue para assunto
+        $stmt->execute();
+    }
 
 	public function recuperar()
 	{
 		$query = '
             SELECT 
-                t.id, s.status, t.tarefa, t.data_cadastrado, t.prioridade, t.arquivada, t.prazo
+                t.id, s.status, t.tarefa, t.data_cadastrado, t.prioridade, t.arquivada, t.prazo, t.categoria
             FROM 
                 tb_tarefas as t
                 LEFT JOIN tb_status as s ON (t.id_status = s.id)
@@ -39,7 +41,7 @@ class TarefaService
 	{
 		$query = '
             SELECT 
-                t.id, s.status, t.tarefa, t.data_cadastrado, t.prioridade, t.arquivada, t.prazo
+			t.id, s.status, t.tarefa, t.data_cadastrado, t.prioridade, t.arquivada, t.prazo, t.categoria
             FROM 
                 tb_tarefas as t
                 LEFT JOIN tb_status as s ON (t.id_status = s.id)
@@ -78,13 +80,19 @@ class TarefaService
 	}
 
 	public function arquivar()
-{
-    $query = 'UPDATE tb_tarefas SET arquivada = 1 WHERE id = :id';
-    $stmt = $this->conexao->prepare($query);
-    $stmt->bindValue(':id', $this->tarefa->__get('id'));
-    return $stmt->execute();
-}
-
+	{
+		$query = 'UPDATE tb_tarefas SET arquivada = 1 WHERE id = :id';
+		$stmt = $this->conexao->prepare($query);
+		$stmt->bindValue(':id', $this->tarefa->__get('id'));
+		return $stmt->execute();
+	}
+	public function desarquivar($id)
+	{
+		$query = 'UPDATE tb_tarefas SET arquivada = 0 WHERE id = :id';
+		$stmt = $this->conexao->prepare($query);
+		$stmt->bindValue(':id', $this->tarefa->__get('id'));
+		return $stmt->execute();
+	}
 	public function recuperarTarefasPendentes()
 	{
 		$query = '
@@ -102,29 +110,4 @@ class TarefaService
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
-
-
-	public function recuperarNaoArquivadas()
-	{
-		$query = '
-            SELECT 
-                t.id, s.status, t.tarefa, t.data_cadastrado, t.prioridade, t.arquivada
-            FROM 
-                tb_tarefas as t
-                LEFT JOIN tb_status as s ON (t.id_status = s.id)
-            WHERE 
-                t.arquivada = 0
-        ';
-		$stmt = $this->conexao->prepare($query);
-		$stmt->execute();
-		return $stmt->fetchAll(PDO::FETCH_OBJ);
-	}
-
-	public function excluirArquivadas()
-	{
-		$query = 'DELETE FROM tb_tarefas WHERE arquivada = 1';
-		$stmt = $this->conexao->prepare($query);
-		return $stmt->execute();
-	}
 }
-?>

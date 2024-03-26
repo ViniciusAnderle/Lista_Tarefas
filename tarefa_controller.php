@@ -11,6 +11,8 @@ if ($acao == 'inserir') {
     $tarefa->__set('tarefa', $_POST['tarefa']);
     $tarefa->__set('prioridade', $_POST['prioridade']);
     $tarefa->__set('prazo', $_POST['prazo']); // Adiciona o prazo
+    $tarefa->__set('categoria', $_POST['categoria']); 
+
 
     $conexao = new Conexao();
 

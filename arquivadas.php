@@ -9,6 +9,15 @@ $conexao = new Conexao();
 $tarefaService = new TarefaService($conexao, $tarefa);
 $tarefas = $tarefaService->recuperarArquivadas();
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['acao']) && $_GET['acao'] === 'desarquivar' && isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $conexao = new Conexao();
+    $tarefa = new Tarefa();
+    $tarefaService = new TarefaService($conexao, $tarefa);
+    $tarefaService->desarquivar($id);
+    echo 'Tarefa desarquivada com sucesso!';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +30,6 @@ $tarefas = $tarefaService->recuperarArquivadas();
     <link rel="stylesheet" href="css/estilo.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-
 </head>
 <body>
     <nav class="navbar navbar-light bg-light">
@@ -39,7 +47,7 @@ $tarefas = $tarefaService->recuperarArquivadas();
                 <ul class="list-group">
                     <li class="list-group-item"><a href="index.php">Tarefas pendentes</a></li>
                     <li class="list-group-item"><a href="nova_tarefa.php">Nova tarefa</a></li>
-                    <li class="list-group-item"><a href="todas_tarefas.php">Tarefas Arquivadas</a></li>
+                    <li class="list-group-item"><a href="todas_tarefas.php">Todas Tarefas</a></li>
                     <li class="list-group-item active"><a href="arquivadas.php">Tarefas Arquivadas</a></li>
                 </ul>
             </div>
@@ -66,7 +74,6 @@ $tarefas = $tarefaService->recuperarArquivadas();
                                         ?>
                                         <br>
                                         Criado em: <?= date('d/m/Y H:i', strtotime($tarefa->data_cadastrado)) ?>
-                                        <!-- Exibir o prazo mesmo que esteja vazio -->
                                         - Prazo: <?= !empty($tarefa->prazo) ? date('d/m/Y', strtotime($tarefa->prazo)) : 'Não definido' ?>
                                     </div>
                                     <div class="col-sm-3 mt-2 d-flex justify-content-between">
@@ -78,8 +85,7 @@ $tarefas = $tarefaService->recuperarArquivadas();
 
                                         <i class="fas fa-edit fa-lg text-info" onclick="editar(<?= $tarefa->id ?>, '<?= $tarefa->tarefa ?>')"></i>
 
-                                        <!-- Adicionando o ícone de desarquivar -->
-                                        <i class="fas fa-folder-open fa-lg text-warning" onclick="desarquivar(<?= $tarefa->id ?>)"></i>
+                                        <i class="fas fa-archive fa-lg text-warning" onclick="desarquivarTarefa(<?= $tarefa->id ?>)"></i>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -91,5 +97,80 @@ $tarefas = $tarefaService->recuperarArquivadas();
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>
+        function editar(id, txt_tarefa) {
+
+            //criar um form de edição
+            let form = document.createElement('form')
+            form.action = 'tarefa_controller.php?acao=atualizar'
+            form.method = 'post'
+            form.className = 'row'
+
+            //criar um input para entrada do texto
+            let inputTarefa = document.createElement('input')
+            inputTarefa.type = 'text'
+            inputTarefa.name = 'tarefa'
+            inputTarefa.className = 'col-9 form-control'
+            inputTarefa.value = txt_tarefa
+
+            //criar um input hidden para guardar o id da tarefa
+            let inputId = document.createElement('input')
+            inputId.type = 'hidden'
+            inputId.name = 'id'
+            inputId.value = id
+
+            //criar um button para envio do form
+            let button = document.createElement('button')
+            button.type = 'submit'
+            button.className = 'col-3 btn btn-info'
+            button.innerHTML = 'Atualizar'
+
+            //incluir inputTarefa no form
+            form.appendChild(inputTarefa)
+
+            //incluir inputId no form
+            form.appendChild(inputId)
+
+            //incluir button no form
+            form.appendChild(button)
+
+            //teste
+
+            //teste
+            //console.log(form)
+
+            //selecionar a div tarefa
+            let tarefa = document.getElementById('tarefa_' + id)
+
+            //limpar o texto da tarefa para inclusão do form
+            tarefa.innerHTML = ''
+
+            //incluir form na página
+            tarefa.insertBefore(form, tarefa.firstChild)
+
+        }
+
+        function remover(id) {
+            location.href = 'todas_tarefas.php?acao=remover&id=' + id;
+        }
+
+        function marcarRealizada(id) {
+            location.href = 'todas_tarefas.php?acao=marcarRealizada&id=' + id;
+        }
+
+        function desarquivarTarefa(id) {
+        // enviar requisição AJAX para desarquivar a tarefa
+        $.ajax({
+            type: "GET",
+            url: "arquivadas.php",
+            data: {acao: "desarquivar", id: id},
+            success: function(response) {
+                alert(response); // exibir mensagem de sucesso ou erro
+                window.location.reload(); // recarregar a página após ação concluída
+            }
+        });
+    }
+</script>
 </body>
 </html>

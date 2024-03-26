@@ -44,7 +44,7 @@ if ($filtro === 'pendentes') {
 }
 
 // Ordenar o array de tarefas filtradas de acordo com a opção selecionada
-if ($ordenacao === 'data_cadastro') {
+if ($ordenacao === 'data_cadastrado') {
     usort($tarefasFiltradas, 'compararDatas');
 } else if ($ordenacao === 'prioridade') {
     usort($tarefasFiltradas, 'compararPrioridades');
@@ -165,63 +165,48 @@ if ($ordenacao === 'data_cadastro') {
                             <form id="formFiltro" method="get">
                                 <label for="filtro">Filtrar por:</label>
                                 <select id="filtro" name="filtro" onchange="this.form.submit()">
-                                    <option value="todas" <?php echo $filtro === 'todas' ? 'selected' : ''; ?>>Todas</option>
-                                    <option value="pendentes" <?php echo $filtro === 'pendentes' ? 'selected' : ''; ?>>Pendentes</option>
-                                    <option value="realizado" <?php
-                                                                echo $filtro === 'realizado' ? 'selected' : ''; ?>>Realizadas</option>
+                                    <option value="todas" <?php echo $filtro === 'todas' ? 'selected' : ''; ?>>Todas</option <option value="pendentes" <?php echo $filtro === 'pendentes' ? 'selected' : ''; ?>>Pendentes</option>
+                                    <option value="realizado" <?php echo $filtro === 'realizado' ? 'selected' : ''; ?>>Realizadas</option>
                                 </select>
                             </form>
 
-                            <form id="formOrdenar" method="get">
-                                <label for="ordenacao">Ordenar por:</label>
-                                <select id="ordenacao" name="ordenacao" onchange="this.form.submit()">
-                                    <option value="alfabetica" <?php echo $ordenacao === 'alfabetica' ? 'selected' : ''; ?>>Ordem alfabética</option>
-                                    <option value="data_cadastro" <?php echo $ordenacao === 'data_cadastro' ? 'selected' : ''; ?>>Data de criação</option>
-                                    <option value="prioridade" <?php echo $ordenacao === 'prioridade' ? 'selected' : ''; ?>>Prioridade</option>
-                                </select>
-                            </form>
+                            <br />
 
-                            <?php
-                            // Exibir as tarefas filtradas
-                            foreach ($tarefasFiltradas as $indice => $tarefa) {
-                                // Verifica se o filtro é "arquivadas" e se a tarefa não está arquivada
-                                if ($filtro === 'arquivadas' && $tarefa->status !== 'arquivada') {
-                                    continue;
-                                }
-                            ?>
-                                <div class="row mb-3 d-flex align-items-center tarefa">
-                                    <div class="col-sm-9" id="tarefa_<?= $tarefa->id ?>">
-                                        <?= $tarefa->tarefa ?> (<?= $tarefa->status ?>) - Prioridade:
-                                        <?php
-                                        if ($tarefa->prioridade == 1) {
-                                            echo 'Alta';
-                                        } elseif ($tarefa->prioridade == 2) {
-                                            echo 'Média';
-                                        } elseif ($tarefa->prioridade == 3) {
-                                            echo 'Baixa';
-                                        }
-                                        ?>
-                                        <br>
-                                        Criado em: <?= date('d/m/Y H:i', strtotime($tarefa->data_cadastrado)) ?>
-                                        <!-- Exibir o prazo mesmo que esteja vazio -->
-                                        - Prazo: <?= !empty($tarefa->prazo) ? date('d/m/Y', strtotime($tarefa->prazo)) : 'Não definido' ?>
-                                    </div>
-                                    <div class="col-sm-3 mt-2 d-flex justify-content-between">
-                                        <i class="fas fa-trash-alt fa-lg text-danger" onclick="remover(<?= $tarefa->id ?>)"></i>
-
-                                        <?php
-                                        if ($tarefa->status === 'pendente') { ?>
-                                            <i class="fas fa-check-square fa-lg text-success" onclick="marcarRealizada(<?= $tarefa->id ?>)"></i>
-                                        <?php } ?>
-
-                                        <i class="fas fa-edit fa-lg text-info" onclick="editar(<?= $tarefa->id ?>, '<?= $tarefa->tarefa ?>')"></i>
-
-                                        <!-- Adicionando o ícone de arquivar -->
-                                        <i class="fas fa-archive fa-lg text-warning" onclick="arquivar(<?= $tarefa->id ?>)"></i>
-                                    </div>
-                                </div>
-                            <?php } ?>
-
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Tarefa</th>
+                                        <th scope="col">Categoria</th>
+                                        <th scope="col">Data de Cadastro</th>
+                                        <th scope="col">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($tarefasFiltradas as $tarefa) : ?>
+                                        <tr>
+                                            <td id="tarefa_<?php echo $tarefa->id; ?>"><?php echo $tarefa->tarefa; ?></td>
+                                            <td><?php echo $tarefa->categoria; ?></td>
+                                            <td><?php echo date('d/m/Y H:i:s', strtotime($tarefa->data_cadastrado)); ?></td>
+                                            <td>
+                                                <button class="btn btn-warning" onclick="editar(<?php echo $tarefa->id; ?>, '<?php echo $tarefa->tarefa; ?>')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-danger" onclick="remover(<?php echo $tarefa->id; ?>)">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                                <?php if ($tarefa->status === 'pendente') : ?>
+                                                    <button class="btn btn-success" onclick="marcarRealizada(<?php echo $tarefa->id; ?>)">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                <?php endif; ?>
+                                                <button class="btn btn-primary" onclick="arquivar(<?php echo $tarefa->id; ?>)">
+                                                    <i class="fas fa-archive"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -229,6 +214,9 @@ if ($ordenacao === 'data_cadastro') {
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </body>
 
 </html>

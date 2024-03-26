@@ -7,6 +7,8 @@ class Tarefa {
 	private $data_cadastro;
 	private $prioridade;
 	private $prazo;
+	private $assunto;
+
 
 
 	public function __get($atributo) {
