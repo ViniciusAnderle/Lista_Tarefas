@@ -5,24 +5,6 @@ $tarefas = []; // Inicializa a variável $tarefas como um array vazio
 $acao = 'recuperar';
 require './tarefa_controller.php';
 
-// Função de comparação para ordenar alfabeticamente
-function compararTarefas($a, $b)
-{
-    return strcmp($a->tarefa, $b->tarefa);
-}
-
-// Função de comparação para ordenar por data de criação
-function compararDatas($a, $b)
-{
-    return strtotime($a->data_cadastrado) - strtotime($b->data_cadastrado);
-}
-
-// Função de comparação para ordenar por prioridade
-function compararPrioridades($a, $b)
-{
-    return intval($a->prioridade) - intval($b->prioridade);
-}
-
 // Verifica a opção de ordenação selecionada
 $ordenacao = ($_GET['ordenacao'] ?? '');
 
@@ -55,6 +37,37 @@ if ($ordenacao === 'data_cadastrado') {
 } else {
     // Default: ordenar alfabeticamente
     usort($tarefasFiltradas, 'compararTarefas');
+}
+
+function compararTarefas($a, $b)
+{
+    return strcmp($a->tarefa, $b->tarefa);
+}
+
+// Função de comparação para ordenar por data de criação
+function compararDatas($a, $b)
+{
+    return strtotime($a->data_cadastrado) - strtotime($b->data_cadastrado);
+}
+
+// Função de comparação para ordenar por prioridade
+function compararPrioridades($a, $b)
+{
+    return intval($a->prioridade) - intval($b->prioridade);
+}
+
+function traduzPrioridade($prioridade)
+{
+    switch ($prioridade) {
+        case 3:
+            return 'Baixa';
+        case 2:
+            return 'Média';
+        case 1:
+            return 'Alta';
+        default:
+            return 'Desconhecida';
+    }
 }
 
 ?>
@@ -161,6 +174,7 @@ if ($ordenacao === 'data_cadastrado') {
                             <h4>Todas tarefas</h4>
                             <hr />
 
+                            
                             <form id="formFiltro" method="get">
                                 <label for="filtro">Filtrar por:</label>
                                 <select id="filtro" name="filtro" onchange="this.form.submit()">
@@ -168,6 +182,13 @@ if ($ordenacao === 'data_cadastrado') {
                                     <option value="pendentes" <?php echo $filtro === 'pendentes' ? 'selected' : ''; ?>>Pendentes</option>
                                     <option value="realizado" <?php echo $filtro === 'realizado' ? 'selected' : ''; ?>>Realizadas</option>
                                     <option value="vencidas" <?php echo $filtro === 'vencidas' ? 'selected' : ''; ?>>Vencidas</option>
+                                </select>
+
+                                <label for="ordenacao">Ordenar por:</label>
+                                <select id="ordenacao" name="ordenacao" onchange="this.form.submit()">
+                                    <option value="tarefa" <?php echo $ordenacao === 'tarefa' ? 'selected' : ''; ?>>Alfabética</option>
+                                    <option value="data_cadastrado" <?php echo $ordenacao === 'data_cadastrado' ? 'selected' : ''; ?>>Data de Cadastro</option>
+                                    <option value="prioridade" <?php echo $ordenacao === 'prioridade' ? 'selected' : ''; ?>>Prioridade</option>
                                 </select>
                             </form>
 
@@ -178,6 +199,8 @@ if ($ordenacao === 'data_cadastrado') {
                                     <tr>
                                         <th scope="col">Tarefa</th>
                                         <th scope="col">Categoria</th>
+                                        <th scope="col">Prioridade</th>
+
                                         <th scope="col">Prazo</th>
                                         <th scope="col">Data de Cadastro</th>
                                         <th scope="col">Ações</th>
@@ -188,6 +211,8 @@ if ($ordenacao === 'data_cadastrado') {
                                         <tr>
                                             <td id="tarefa_<?php echo $tarefa->id; ?>"><?php echo $tarefa->tarefa; ?></td>
                                             <td><?php echo $tarefa->categoria; ?></td>
+                                            <td><?php echo traduzPrioridade($tarefa->prioridade); ?></td>
+
                                             <td><?php echo $tarefa->prazo ? date('d/m/Y', strtotime($tarefa->prazo)) : 'Sem prazo'; ?></td>
                                             <td><?php echo date('d/m/Y H:i:s', strtotime($tarefa->data_cadastrado)); ?></td>
                                             <td>
